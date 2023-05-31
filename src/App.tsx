@@ -7,13 +7,38 @@ const getFormattedPrice = (price: number) => `${price}€`;
 
 function App() {
 
+  const obtainPage = () => {
+    const pages = localStorage.getItem('page');
+    if(pages){
+      return JSON.parse(pages)
+    } else {
+      return 1
+    }
+  }
+  const obtainLanguage = () => {
+    const languages = localStorage.getItem('language');
+    if(languages){
+      return JSON.parse(languages)
+    } else {
+      return 1
+    }
+  }
+  const obtainPrice = () => {
+    const totalPrices = localStorage.getItem('totalPrice');
+    if(totalPrices){
+      return JSON.parse(totalPrices)
+    } else {
+      return 0
+    }
+  }
+
   const [checkedState, setCheckedState] = useState<boolean[]>(
     new Array(arrayBudget.length).fill(false)
   )
 
-  const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
-  const [language, setLanguage] = useState(1);
+  const [page, setPage] = useState(obtainPage())
+  const [language, setLanguage] = useState(obtainLanguage());
+  const [total, setTotal] = useState(obtainPrice());
 
   function pageChange(toAdd: number){
     if(page >= 1){
@@ -24,7 +49,6 @@ function App() {
     if(language >= 1){
       setLanguage(language + toAdd);
     } 
-    
   }
   function controlPage(){
     if(page > 1){
@@ -36,7 +60,8 @@ function App() {
       languageChange(-1);
     }
   }
-  const handleOnChange = (position: number) => {
+  
+  const handleOnChange = (position?: number) => {
     const updatedCheckedState = checkedState.map((item, index) =>
       index === position ? !item : item
     );
@@ -58,11 +83,23 @@ function App() {
     );
     setTotal(totalPrice);
   };
+  
+  useEffect(() => {
+    handleOnChange()
+  }, [page, language, total])
 
   useEffect(() => {
-    handleOnChange(-1)
-    console.log(page)
-  }, [page, language])
+    const checkedStates = window.localStorage.getItem('checkedState');
+      if(checkedStates) setCheckedState(JSON.parse(checkedStates));
+    
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('page', JSON.stringify(page))
+    localStorage.setItem('language', JSON.stringify(language))
+    localStorage.setItem('totalPrice', JSON.stringify(total))
+    localStorage.setItem('checkedState', JSON.stringify(checkedState))
+  }, [ page, language, checkedState, total])
   
   return (
     <div className='budget'>
@@ -86,10 +123,10 @@ function App() {
                     <label htmlFor="">Número de páginas</label>
                     <Button handleClick={controlPage} className='less' text='-'/>
                     <input 
-                      type="number"
+                      type="text"
                       name='page'
                       value={page}
-                      onChange={() => handleOnChange(index)}
+                      onChange={() => obtainPage()}
                     />
                     <Button handleClick={() => pageChange(1)} className='more' text='+'/>
                   </li>
@@ -97,10 +134,10 @@ function App() {
                     <label htmlFor="">Número de idiomas</label>
                     <Button handleClick={controlLenaguage} className='less' text='-'/>
                     <input 
-                      type="number"
+                      type="text"
                       name='language'
                       value={language}
-                      onChange={() => handleOnChange(index)}
+                      onChange={() => obtainLanguage()}
                     />
                     <Button handleClick={() => languageChange(1)} className='more' text='+'/>
                   </li>
