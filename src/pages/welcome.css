@@ -1,0 +1,21 @@
+.divWelcome{
+  height: 30rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.linkBudget{
+  text-decoration: none;
+  font-size: xx-large;
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: rgb(87, 29, 106);
+  color: white;
+}
+.linkBudget:hover{
+  background-color: rgb(186, 69, 224);
+}
+h2, p{
+  font-size: xx-large;
+}
