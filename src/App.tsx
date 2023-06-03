@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom"
 import Welcome from "./pages/welcome"
 import Budget from "./pages/budget"
-import "./App.css"
 
 function App() {
 

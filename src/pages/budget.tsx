@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { arrayBudget } from '../budget/arrayBudget';
 import { Button } from '../components/button';
+import "./budget.css"
+import { Popup } from '../components/popup';
 
 const getFormattedPrice = (price: number) => `${price}€`;
 
@@ -126,6 +128,7 @@ function Budget() {
                       onChange={() => obtainPage()}
                     />
                     <Button handleClick={() => pageChange(1)} className='more' text='+'/>
+                    <Popup name='page' text='En este componente debe indicar el número de PÁGINAS que tendrá su sitio web.' />
                   </li>
                   <li>
                     <label htmlFor="">Número de idiomas</label>
@@ -137,6 +140,7 @@ function Budget() {
                       onChange={() => obtainLanguage()}
                     />
                     <Button handleClick={() => languageChange(1)} className='more' text='+'/>
+                    <Popup name='language' text='En este componente debe indicar el número de LENGUANJES que tendrá su sitio web.'/>
                   </li>
                 </ul>
               </li>
