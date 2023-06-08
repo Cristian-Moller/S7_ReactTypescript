@@ -3,6 +3,8 @@ import { arrayBudget } from '../budget/arrayBudget';
 import { Button } from '../components/button';
 import "./budget.css"
 import { Popup } from '../components/popup';
+import { ListBadget } from '../components/listBudget';
+import { arrayType } from '../types/types';
 
 const getFormattedPrice = (price: number) => `${price}€`;
 
@@ -40,6 +42,35 @@ function Budget() {
   const [page, setPage] = useState(obtainPage())
   const [language, setLanguage] = useState(obtainLanguage());
   const [total, setTotal] = useState(obtainPrice());
+  const [clientName, setClientName] = useState<string>('')
+  const [pressupostName, setPressupostName] = useState<string>('')
+  const [newBudget, setNewBudget] = useState<arrayType[]>([])
+  
+
+  const handleSubmitInfo = (event: React.MouseEvent<HTMLInputElement>) => {
+    event.preventDefault();
+  }
+
+  const date = new Date()
+  
+  const handleSubmit = (event: React.MouseEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const itemData: arrayType = {
+      services: [],
+      page: page,
+      language: language,
+      total: total,
+      day: date.getDate(),
+      month: date.getMonth() + 1,
+      year: date.getFullYear(),
+      clientName: clientName,
+      pressupostName: pressupostName,
+    }
+    itemData.services = checkedState.map((isChecked, index) => (isChecked ? arrayBudget[index].id : null))
+    .filter((id) => id !== null) as string[]
+
+    setNewBudget((previo) => [...previo, itemData])
+  }
 
   function pageChange(toAdd: number){
     if(page >= 1){
@@ -99,53 +130,17 @@ function Budget() {
     localStorage.setItem('language', JSON.stringify(language))
     localStorage.setItem('totalPrice', JSON.stringify(total))
     localStorage.setItem('checkedState', JSON.stringify(checkedState))
-  }, [ page, language, checkedState, total])
+    localStorage.setItem('newBudget', JSON.stringify(newBudget))
+  }, [page, language, checkedState, total, newBudget])
   
   return (
     <div className='budget'>
       <h3>Budget</h3>
-      <ul>
-        {arrayBudget.map(({ name, price }, index) => {
-          if ((index == 0) && (checkedState[0] == true)){
-            return (
-              <li key={index}>
-                <input
-                  type="checkbox"
-                  name={name}
-                  value={name}
-                  checked={checkedState[index]}
-                  onChange={() => handleOnChange(index)}
-                />
-                <label>{name} ({getFormattedPrice(price)})</label>
-                <ul className='subList'>
-                  <li>
-                    <label htmlFor="">Número de páginas</label>
-                    <Button handleClick={controlPage} className='less' text='-'/>
-                    <input 
-                      type="text"
-                      name='page'
-                      value={page}
-                      onChange={() => obtainPage()}
-                    />
-                    <Button handleClick={() => pageChange(1)} className='more' text='+'/>
-                    <Popup name='page' text='En este componente debe indicar el número de PÁGINAS que tendrá su sitio web.' />
-                  </li>
-                  <li>
-                    <label htmlFor="">Número de idiomas</label>
-                    <Button handleClick={controlLenaguage} className='less' text='-'/>
-                    <input 
-                      type="text"
-                      name='language'
-                      value={language}
-                      onChange={() => obtainLanguage()}
-                    />
-                    <Button handleClick={() => languageChange(1)} className='more' text='+'/>
-                    <Popup name='language' text='En este componente debe indicar el número de LENGUANJES que tendrá su sitio web.'/>
-                  </li>
-                </ul>
-              </li>
-            );
-          } else {
+
+      <form action="" className='form-budget' onSubmit={handleSubmitInfo}>
+        <ul>
+          {arrayBudget.map(({ name, price }, index) => {
+            if ((index == 0) && (checkedState[0] == true)){
               return (
                 <li key={index}>
                   <input
@@ -156,17 +151,84 @@ function Budget() {
                     onChange={() => handleOnChange(index)}
                   />
                   <label>{name} ({getFormattedPrice(price)})</label>
+                  <ul className='subList'>
+                    <li>
+                      <label htmlFor="">Número de páginas</label>
+                      <Button handleClick={controlPage} className='less' text='-'/>
+                      <input 
+                        type="text"
+                        name='page'
+                        value={page}
+                        onChange={() => obtainPage()}
+                      />
+                      <Button handleClick={() => pageChange(1)} className='more' text='+'/>
+                      <Popup name='page' text='En este componente debe indicar el número de PÁGINAS que tendrá su sitio web.' handleClick={handleSubmitInfo} />
+                    </li>
+                    <li>
+                      <label htmlFor="">Número de idiomas</label>
+                      <Button handleClick={controlLenaguage} className='less' text='-'/>
+                      <input 
+                        type="text"
+                        name='language'
+                        value={language}
+                        onChange={() => obtainLanguage()}
+                      />
+                      <Button handleClick={() => languageChange(1)} className='more' text='+'/>
+                      <Popup name='language' text='En este componente debe indicar el número de LENGUANJES que tendrá su sitio web.' handleClick={handleSubmitInfo} />
+                    </li>
+                  </ul>
                 </li>
               );
-            }
-        })}
-        <li>
-          <div>
-            Total: {getFormattedPrice(total)}
-          </div>
-        </li>
-      </ul>
+            } else {
+                return (
+                  <li key={index}>
+                    <input
+                      type="checkbox"
+                      name={name}
+                      value={name}
+                      checked={checkedState[index]}
+                      onChange={() => handleOnChange(index)}
+                    />
+                    <label>{name} ({getFormattedPrice(price)})</label>
+                  </li>
+                );
+              }
+          })}
+          <li>
+            <label htmlFor="">Nombre Cliente: </label>
+            <input 
+              type="text"
+              value={clientName}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setClientName(e.target.value)
+              }}
+            />
+          </li>
+          <li>
+            <label htmlFor="">Nombre Presupuesto: </label>
+            <input 
+              type="text"
+              value={pressupostName}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setPressupostName(e.target.value)
+              }}
+            />
+          </li>
+          <li>
+            <div>
+              Total: {getFormattedPrice(total)}
+            </div>
+          </li>
+          <li>
+            <input type="submit" value="Save Budget" onClick={handleSubmit}></input>
+          </li>
+        </ul>
+      </form>
+
+      <ListBadget newBudget={newBudget} />
+      
     </div>
+    
   )
 }
 

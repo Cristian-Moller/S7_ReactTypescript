@@ -1,12 +1,23 @@
 .budget{
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 h3{
+  width: 80%;
   font-size: 2rem;
   margin-block-end: 0;
   text-decoration: underline;
+  text-align: center;
+}
+.form-budget{
+  width: 50%;
+}
+.list-budget{
+  width: 40%;
+  height: 26rem;
+  border: 1px solid black;
 }
 ul{
   list-style: none;
@@ -19,10 +30,12 @@ li div{
   font-weight: bold;
 }
 .subList{
+  width: fit-content;
   display: flex;
   flex-direction: column;
   margin: 0.3rem;
-  padding: 0.3rem;
+  margin-left: 2rem;
+  padding: 0.5rem;
   border: 0.2rem solid black;
   border-radius: 1rem;
 }
@@ -85,7 +98,7 @@ li div{
 }
 .popup-container{
   min-height: 3.5rem;
-  max-height: auto;
+  max-height: 3.5rem;
   position: relative;
   background-color: white;
   font-size: x-large;
@@ -94,4 +107,32 @@ li div{
   border: 0.2rem solid black;
   display: flex;
   align-items: center;
+}
+
+.filter-row{
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.itemBudget{
+  height: 18rem;
+  overflow-y: scroll;
+  
+}
+.subItemBudget{
+  border-bottom: 0.3rem dashed black;
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.subItemBudget div{
+  margin-right: 0.5rem;
+  padding: 0.2rem;
+}
+.subItemBudget div span{
+  font-size: large;
+  font-weight: bold;
 }
