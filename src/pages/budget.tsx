@@ -44,8 +44,31 @@ function Budget() {
   const [total, setTotal] = useState(obtainPrice());
   const [clientName, setClientName] = useState<string>('')
   const [pressupostName, setPressupostName] = useState<string>('')
-  const [newBudget, setNewBudget] = useState<arrayType[]>([])
-  
+  const [newBudget, setNewBudget] = useState<arrayType[]>([
+    //array test para probar que ordena por fecha
+    {
+      clientName: "Mario",
+      day: 1,
+      language: 4,
+      month: 6,
+      page: 4,
+      pressupostName: "IT Academy",
+      services: ['web', 'ads'],
+      total: 1180,
+      year: 2023
+    },
+    {
+      clientName: "Julian",
+      day: 15,
+      language: 4,
+      month: 6,
+      page: 4,
+      pressupostName: "Correos",
+      services: ['web', 'ads'],
+      total: 1180,
+      year: 2023
+    }
+  ])
 
   const handleSubmitInfo = (event: React.MouseEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -53,8 +76,7 @@ function Budget() {
 
   const date = new Date()
   
-  const handleSubmit = (event: React.MouseEvent<HTMLInputElement>) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     const itemData: arrayType = {
       services: [],
       page: page,
@@ -69,7 +91,7 @@ function Budget() {
     itemData.services = checkedState.map((isChecked, index) => (isChecked ? arrayBudget[index].id : null))
     .filter((id) => id !== null) as string[]
 
-    setNewBudget((previo) => [...previo, itemData])
+    setNewBudget((arrayItemData) => [...arrayItemData, itemData])
   }
 
   function pageChange(toAdd: number){
@@ -220,7 +242,7 @@ function Budget() {
             </div>
           </li>
           <li>
-            <input type="submit" value="Save Budget" onClick={handleSubmit}></input>
+            <input type="submit" value="Save Budget" onClick={handleSubmit} className='buttonSubmit'></input>
           </li>
         </ul>
       </form>

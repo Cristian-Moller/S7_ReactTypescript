@@ -1,27 +1,93 @@
+import { useState } from "react";
 import "../pages/budget.css"
 import { arrayType } from "../types/types"
+import { Button } from "./button";
 
 type listProp = {
   newBudget: arrayType[];
 }
 
 export function ListBadget({newBudget}: listProp){
-
+  const [newBudgetOrder, setNewBudgetOrder] = useState<arrayType[]>([])
+  const [alphabetic, setAlphabetic] = useState<boolean>(false)
+  const [date, setDate] = useState<boolean>(false)
   
+  function alphabeticalOrder(): void {
+    const arrayAlphabetic = [...newBudget]
+    if(alphabetic){
+      //ascendente
+      arrayAlphabetic.sort((a, b) => {
+        if(a.clientName < b.clientName) {
+          return -1
+        }
+        if(a.clientName > b.clientName) {
+          return 1
+        }
+        return 0
+      })
+    } else {
+      //descendente
+      arrayAlphabetic.sort((a, b) => {
+        if(a.clientName < b.clientName) {
+          return 1
+        }
+        if(a.clientName > b.clientName) {
+          return -1
+        }
+        return 0
+      })
+    }
+    setAlphabetic(!alphabetic)
+    return setNewBudgetOrder(arrayAlphabetic)
+  }
+
+  function dateOrder(): void {
+    const arrayDate = [...newBudget]
+    if(date){
+      //ascendente
+      arrayDate.sort((a, b) => {
+        if(a.day < b.day) {
+          return -1
+        }
+        if(a.day > b.day) {
+          return 1
+        }
+        return 0
+      })
+    } else {
+      //descendente
+      arrayDate.sort((a, b) => {
+        if(a.day < b.day) {
+          return 1
+        }
+        if(a.day > b.day) {
+          return -1
+        }
+        return 0
+      })
+    }
+    setDate(!date)
+    return setNewBudgetOrder(arrayDate)
+  }
+
+  function resetArray(): void {
+    const array = [...newBudget]
+    return setNewBudgetOrder(array)
+  }
   
   return (
     <div className='list-budget'>
           <h2>My Budgets</h2>
         <div className='filter-row'>
-          <button>Filter</button>
-          <button>Filter</button>
-          <button>Filter</button>
-          <button>Filter</button>
-          <button>Filter</button>
+          <Button className='order' handleClick={alphabeticalOrder} text='ABC' ></Button>
+          <Button className='order' handleClick={dateOrder} text='DAY' ></Button>
+          <Button className='order' handleClick={resetArray} text='Reset' ></Button>
+          
         </div>
         <div className='itemBudget'>
           {
-            newBudget.map((itemData, index) => (
+            ((newBudgetOrder < newBudget) ? newBudget : newBudgetOrder) 
+            .map((itemData, index) => (
               <div key={index} className='subItemBudget'>
                 <div>Name: <span>{itemData.clientName}</span></div>
                 <div>Budget Name: <span>{itemData.pressupostName}</span></div>
